@@ -1,0 +1,40 @@
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name:
+      intune
+  datasource:
+    url: jdbc:mysql://엔드포인트/intune?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: 아이디
+    password: 비밀번호
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        highlight_sql: true
+        type: trace
+        jdbc:
+          batch_size: 30
+          generate_statistics: true
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+
+jwt:
+  access:
+    secret: ser6g5WEQrEfgg4h8sth4IHI5634eeg5se5EWFT234EG7ETRWer4t
+    expiration: 1209600000
