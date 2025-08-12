@@ -8,6 +8,7 @@ import com.next.intune.user.dto.request.SignInRequestDto;
 import com.next.intune.user.entity.User;
 import com.next.intune.user.repository.ProfileImageRepository;
 import com.next.intune.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +28,7 @@ public class UserService {
     private final ProfileImageRepository profileImageRepository;
 
     public void signIn(HttpServletResponse response, SignInRequestDto dto) {
-        User user = userRepository.findByEmail(dto.getEmail())
+        User user = userRepository.findByEmailAndValidTrue(dto.getEmail())
                 .orElseThrow(() -> new CustomException(ResponseCode.LOGIN_ERROR));
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
@@ -42,5 +43,13 @@ public class UserService {
 
         CookieHelper.addCookie(response, "access_token", token);
         CookieHelper.addCookie(response, "access_token_expires_at", utcExpiresAt);
+    }
+
+    public void removeMember(HttpServletRequest request) {
+        String email = jwtProvider.extractEmailFromRequest(request);
+        User user = userRepository.findByEmailAndValidTrue(email)
+                .orElseThrow(() -> new CustomException(ResponseCode.LOGIN_ERROR));
+        user.removeUser();
+        userRepository.save(user);
     }
 }

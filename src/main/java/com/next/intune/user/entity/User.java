@@ -74,4 +74,8 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = Instant.now();
     }
+
+    public void removeUser() {
+        this.valid = false;
+    }
 }
