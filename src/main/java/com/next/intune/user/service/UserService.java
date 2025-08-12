@@ -27,7 +27,7 @@ public class UserService {
     private final ProfileImageRepository profileImageRepository;
 
     public void signIn(HttpServletResponse response, SignInRequestDto dto) {
-        User user = userRepository.findByEmail(dto.getEmail())
+        User user = userRepository.findByEmailAndValidTrue(dto.getEmail())
                 .orElseThrow(() -> new CustomException(ResponseCode.LOGIN_ERROR));
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
