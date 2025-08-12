@@ -5,6 +5,7 @@ import com.next.intune.user.dto.request.SignInRequestDto;
 import com.next.intune.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,13 @@ public class UserController {
     @Operation(summary = "로그인", description = "이메일과 비밀번호을 입력해주세요.")
     public ResponseEntity<ApiResult<?>> signIn(HttpServletResponse response, @Valid @RequestBody SignInRequestDto dto) {
         userService.signIn(response, dto);
+        return ResponseEntity.ok(ApiResult.success());
+    }
+
+    @PostMapping("/remove")
+    @Operation(summary = "유저 탈퇴")
+    public ResponseEntity<ApiResult<?>> removeMember(HttpServletRequest request) {
+        userService.removeMember(request);
         return ResponseEntity.ok(ApiResult.success());
     }
 }
