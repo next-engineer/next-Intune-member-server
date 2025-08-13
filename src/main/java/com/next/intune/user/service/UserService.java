@@ -4,10 +4,7 @@ import com.next.intune.common.api.CustomException;
 import com.next.intune.common.api.ResponseCode;
 import com.next.intune.common.helper.CookieHelper;
 import com.next.intune.common.security.jwt.JwtProvider;
-import com.next.intune.user.dto.request.CheckEmailRequestDto;
-import com.next.intune.user.dto.request.CheckEmailResponseDto;
-import com.next.intune.user.dto.request.SignInRequestDto;
-import com.next.intune.user.dto.request.SignUpRequestDto;
+import com.next.intune.user.dto.request.*;
 import com.next.intune.user.entity.ProfileImage;
 import com.next.intune.user.entity.User;
 import com.next.intune.user.repository.ProfileImageRepository;
@@ -135,5 +132,38 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ResponseCode.LOGIN_ERROR));
         user.removeUser();
         userRepository.save(user);
+    }
+
+    /**
+     * 회원 정보 수정
+     * - JWT로 사용자 인증 후 회원정보 수정, 프로필이미지 기능 구현 안되었음.
+     */
+    @Transactional
+    public void update(HttpServletResponse response, UpdateRequestDto dto) {
+        User user = userRepository.findByEmailAndValidTrue(dto.getEmail())
+                .orElseThrow(() -> new CustomException(ResponseCode.LOGIN_ERROR));
+
+
+        User updateUser = User.builder()
+                .userId(user.getUserId())
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .name(dto.getName())
+                .mbti(dto.getMbti())
+                .gender(dto.getGender())
+                .address(dto.getAddress())
+                .build();
+
+        userRepository.save(updateUser);
+
+        /*
+        ProfileImage profileImage = insertProfileImage(user);
+        profileImageRepository.save(profileImage);
+        */
+
+        String token = generateToken(user);
+        String expiresAt = generateTokenExpiresAt(token);
+        setTokenInCookie(response, token, expiresAt);
+
     }
 }
