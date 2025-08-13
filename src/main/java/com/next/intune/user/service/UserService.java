@@ -123,6 +123,18 @@ public class UserService {
     }
 
     /**
+     * 닉네임 중복 체크 (정규화 없이 원본 그대로 비교)
+     * - 요청으로 들어온 name 문자열을 그대로 사용하여 유효 회원(valid=true) 기준 존재 여부 확인
+     * - available = true  → 사용 가능(중복 아님)
+     * - available = false → 중복(이미 존재)
+     */
+    @Transactional(readOnly = true)
+    public CheckNameResponseDto checkName(CheckNameRequestDto dto) {
+        boolean exists = userRepository.existsByNameAndValidTrue(dto.getName());
+        return new CheckNameResponseDto(!exists);
+    }
+
+    /**
      * 회원 탈퇴 처리
      * - JWT로 사용자 인증 후, 회원 상태 유효성 (valid)를 'False'로 변경
      */

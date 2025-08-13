@@ -25,4 +25,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
      *         false : 사용 가능한 이메일
      */
     boolean existsByEmailAndValidTrue(String email);
+
+    /**
+     * 주어진 닉네임(name)이 이미 사용 중인지 확인 (유효 회원만 대상으로 함)
+     *
+     * @param name 중복 여부를 확인할 닉네임
+     * @return true  : 해당 닉네임을 가진 유효 회원이 존재함 (중복)
+     *         false : 사용 가능한 닉네임
+     */
+    boolean existsByNameAndValidTrue(String name);
 }

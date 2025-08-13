@@ -66,6 +66,23 @@ public class UserController {
     }
 
     /* -----------------------
+       닉네임 중복 체크
+       ----------------------- */
+    @PostMapping("/check-name")
+    @Operation(
+            summary = "닉네임 중복 체크",
+            description = "입력한 닉네임이 이미 등록되어 있는지 확인합니다. "
+                    + "필수 입력값: name(닉네임). "
+                    + "응답: { available: true } → 사용 가능, { available: false } → 이미 존재."
+    )
+    public ResponseEntity<ApiResult<CheckNameResponseDto>> checkName(
+            @Valid @RequestBody CheckNameRequestDto dto
+    ) {
+        CheckNameResponseDto result = userService.checkName(dto);
+        return ResponseEntity.ok(ApiResult.success(result));
+    }
+
+    /* -----------------------
        회원 탈퇴
        ----------------------- */
     @PostMapping("/remove")
