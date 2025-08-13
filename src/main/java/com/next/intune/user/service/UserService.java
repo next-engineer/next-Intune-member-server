@@ -4,6 +4,8 @@ import com.next.intune.common.api.CustomException;
 import com.next.intune.common.api.ResponseCode;
 import com.next.intune.common.helper.CookieHelper;
 import com.next.intune.common.security.jwt.JwtProvider;
+import com.next.intune.user.dto.request.CheckEmailRequestDto;
+import com.next.intune.user.dto.request.CheckEmailResponseDto;
 import com.next.intune.user.dto.request.SignInRequestDto;
 import com.next.intune.user.dto.request.SignUpRequestDto;
 import com.next.intune.user.entity.ProfileImage;
@@ -109,6 +111,18 @@ public class UserService {
         String token = generateToken(user);
         String expiresAt = generateTokenExpiresAt(token);
         setTokenInCookie(response, token, expiresAt);
+    }
+
+    /**
+     * 이메일 중복 체크 (정규화 없이 원본 그대로 비교)
+     * - 요청으로 들어온 이메일 문자열을 그대로 사용하여 유효 회원(valid=true) 기준 존재 여부를 확인합니다.
+     * - available = true  → 사용 가능(중복 아님)
+     * - available = false → 중복(이미 존재)
+     */
+    @Transactional(readOnly = true)
+    public CheckEmailResponseDto checkEmail(CheckEmailRequestDto dto) {
+        boolean exists = userRepository.existsByEmailAndValidTrue(dto.getEmail());
+        return new CheckEmailResponseDto(!exists);
     }
 
     /**
