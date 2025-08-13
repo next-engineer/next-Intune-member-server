@@ -1,10 +1,7 @@
 package com.next.intune.user.controller;
 
 import com.next.intune.common.api.ApiResult;
-import com.next.intune.user.dto.request.CheckEmailRequestDto;
-import com.next.intune.user.dto.request.CheckEmailResponseDto;
-import com.next.intune.user.dto.request.SignInRequestDto;
-import com.next.intune.user.dto.request.SignUpRequestDto;
+import com.next.intune.user.dto.request.*;
 import com.next.intune.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -65,6 +62,23 @@ public class UserController {
             @Valid @RequestBody CheckEmailRequestDto dto
     ) {
         CheckEmailResponseDto result = userService.checkEmail(dto);
+        return ResponseEntity.ok(ApiResult.success(result));
+    }
+
+    /* -----------------------
+       닉네임 중복 체크
+       ----------------------- */
+    @PostMapping("/check-name")
+    @Operation(
+            summary = "닉네임 중복 체크",
+            description = "입력한 닉네임이 이미 등록되어 있는지 확인합니다. "
+                    + "필수 입력값: name(닉네임). "
+                    + "응답: { available: true } → 사용 가능, { available: false } → 이미 존재."
+    )
+    public ResponseEntity<ApiResult<CheckNameResponseDto>> checkName(
+            @Valid @RequestBody CheckNameRequestDto dto
+    ) {
+        CheckNameResponseDto result = userService.checkName(dto);
         return ResponseEntity.ok(ApiResult.success(result));
     }
 
