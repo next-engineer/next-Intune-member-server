@@ -1,10 +1,7 @@
 package com.next.intune.user.controller;
 
 import com.next.intune.common.api.ApiResult;
-import com.next.intune.user.dto.request.CheckEmailRequestDto;
-import com.next.intune.user.dto.request.CheckEmailResponseDto;
-import com.next.intune.user.dto.request.SignInRequestDto;
-import com.next.intune.user.dto.request.SignUpRequestDto;
+import com.next.intune.user.dto.request.*;
 import com.next.intune.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -81,6 +78,20 @@ public class UserController {
     )
     public ResponseEntity<ApiResult<?>> removeMember(HttpServletRequest request) {
         userService.removeMember(request);
+        return ResponseEntity.ok(ApiResult.success());
+    }
+
+    /* -----------------------
+       회원 정보수정
+       ----------------------- */
+    @PostMapping("/update")
+    @Operation(
+            summary = "회원정보수정",
+            description = "기존 회원 정보를 수정합니다."
+
+    )
+    public ResponseEntity<ApiResult<?>> signUp(HttpServletResponse response, @Valid @RequestBody UpdateRequestDto dto) {
+        userService.update(response, dto);
         return ResponseEntity.ok(ApiResult.success());
     }
 }
