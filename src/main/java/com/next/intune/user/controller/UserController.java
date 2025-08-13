@@ -5,6 +5,7 @@ import com.next.intune.user.dto.request.SignInRequestDto;
 import com.next.intune.user.dto.request.SignUpRequestDto;
 import com.next.intune.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,7 +46,7 @@ public class UserController {
        회원 탈퇴
        ----------------------- */
     @PostMapping("/remove")
-    @Operation(summary = "유저 탈퇴")
+    @Operation(summary = "유저 탈퇴", security = @SecurityRequirement(name="BearerAuth"))
     public ResponseEntity<ApiResult<?>> removeMember(HttpServletRequest request) {
         userService.removeMember(request);
         return ResponseEntity.ok(ApiResult.success());
