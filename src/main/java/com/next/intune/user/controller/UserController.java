@@ -2,6 +2,9 @@ package com.next.intune.user.controller;
 
 import com.next.intune.common.api.ApiResult;
 import com.next.intune.user.dto.request.*;
+import com.next.intune.user.dto.response.CheckEmailResponseDto;
+import com.next.intune.user.dto.response.CheckNameResponseDto;
+import com.next.intune.user.dto.response.MyPageResponseDto;
 import com.next.intune.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -80,6 +83,19 @@ public class UserController {
     ) {
         CheckNameResponseDto result = userService.checkName(dto);
         return ResponseEntity.ok(ApiResult.success(result));
+    }
+
+    /* -----------------------
+       회원 조회
+       ----------------------- */
+    @GetMapping("/profile")
+    @Operation(
+            summary = "마이페이지 조회",
+            description = "현재 로그인된 사용자의 기본 정보를 반환합니다. (이메일, 닉네임, 성별, MBTI, 주소)"
+    )
+    public ResponseEntity<ApiResult<MyPageResponseDto>> getMyProfile(HttpServletRequest request) {
+        MyPageResponseDto dto = userService.getMyPage(request);
+        return ResponseEntity.ok(ApiResult.success(dto));
     }
 
     /* -----------------------
