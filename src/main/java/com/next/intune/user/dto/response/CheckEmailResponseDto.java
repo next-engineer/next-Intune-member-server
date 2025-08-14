@@ -1,4 +1,4 @@
-package com.next.intune.user.dto.request;
+package com.next.intune.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
