@@ -5,6 +5,9 @@ import com.next.intune.common.api.ResponseCode;
 import com.next.intune.common.helper.CookieHelper;
 import com.next.intune.common.security.jwt.JwtProvider;
 import com.next.intune.user.dto.request.*;
+import com.next.intune.user.dto.response.CheckEmailResponseDto;
+import com.next.intune.user.dto.response.CheckNameResponseDto;
+import com.next.intune.user.dto.response.MyPageResponseDto;
 import com.next.intune.user.entity.ProfileImage;
 import com.next.intune.user.entity.User;
 import com.next.intune.user.repository.ProfileImageRepository;
@@ -95,15 +98,15 @@ public class UserService {
         User user = User.builder()
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .name(dto.getName())
+                .name(dto.getNickname())
                 .mbti(dto.getMbti())
                 .gender(dto.getGender())
                 .address(dto.getAddress())
                 .build();
         userRepository.save(user);
 
-        ProfileImage profileImage = insertProfileImage(user);
-        profileImageRepository.save(profileImage);
+//        ProfileImage profileImage = insertProfileImage(user);
+//        profileImageRepository.save(profileImage);
 
         String token = generateToken(user);
         String expiresAt = generateTokenExpiresAt(token);
@@ -124,14 +127,37 @@ public class UserService {
 
     /**
      * 닉네임 중복 체크 (정규화 없이 원본 그대로 비교)
-     * - 요청으로 들어온 name 문자열을 그대로 사용하여 유효 회원(valid=true) 기준 존재 여부 확인
+     * - 요청으로 들어온 nickname 문자열을 그대로 사용하여 유효 회원(valid=true) 기준 존재 여부 확인
      * - available = true  → 사용 가능(중복 아님)
      * - available = false → 중복(이미 존재)
      */
     @Transactional(readOnly = true)
     public CheckNameResponseDto checkName(CheckNameRequestDto dto) {
-        boolean exists = userRepository.existsByNameAndValidTrue(dto.getName());
+        boolean exists = userRepository.existsByNameAndValidTrue(dto.getNickname());
         return new CheckNameResponseDto(!exists);
+    }
+
+    /**
+     * 회원 조회
+     * - 현재 로그인된 사용자의 기본 정보를 반환
+     */
+    @Transactional(readOnly = true)
+    public MyPageResponseDto getMyPage(HttpServletRequest request) {
+        // 1) JWT에서 이메일 추출 (쿠키/헤더에서 꺼내는 로직은 JwtProvider에 위임)
+        String email = jwtProvider.extractEmailFromRequest(request);
+
+        // 2) 유효 회원 조회
+        User user = userRepository.findByEmailAndValidTrue(email)
+                .orElseThrow(() -> new CustomException(ResponseCode.RESOURCE_NOT_FOUND));
+
+        // 3) 응답 DTO 구성 (요구 필드만)
+        return MyPageResponseDto.builder()
+                .email(user.getEmail())
+                .nickname(user.getName())
+                .mbti(user.getMbti())
+                .gender(user.getGender())
+                .address(user.getAddress())
+                .build();
     }
 
     /**
@@ -160,7 +186,7 @@ public class UserService {
                 .userId(user.getUserId())
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .name(dto.getName())
+                .name(dto.getNickname())
                 .mbti(dto.getMbti())
                 .gender(dto.getGender())
                 .address(dto.getAddress())

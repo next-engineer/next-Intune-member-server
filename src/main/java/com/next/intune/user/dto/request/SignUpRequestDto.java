@@ -20,7 +20,7 @@ public class SignUpRequestDto {
     private String password;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
-    private String name;
+    private String nickname;
 
     @NotBlank(message = "MBTI를 선택해주세요.")
     private String mbti;
