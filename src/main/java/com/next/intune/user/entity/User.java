@@ -7,7 +7,8 @@ import java.time.Instant;
 
 @Entity
 @Table(
-        name = "`users`"
+        name = "`users`",
+        catalog = "`intune-member`"
 )
 @Getter
 @Builder
@@ -73,5 +74,9 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = Instant.now();
+    }
+
+    public void removeUser() {
+        this.valid = false;
     }
 }
