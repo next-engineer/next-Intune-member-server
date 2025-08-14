@@ -12,7 +12,7 @@ public class MyPageResponseDto {
     private final String email;
 
     @Schema(description = "닉네임")
-    private final String name;
+    private final String nickname;
 
     @Schema(description = "MBTI")
     private final String mbti;
