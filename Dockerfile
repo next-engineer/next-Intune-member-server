@@ -4,7 +4,7 @@ FROM openjdk:17-jdk-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-COPY build/libs/*.jar app.jar
+COPY build/libs/intune-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port your application runs on
 EXPOSE 8080
