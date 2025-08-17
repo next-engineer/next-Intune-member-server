@@ -8,9 +8,7 @@ import com.next.intune.user.dto.request.*;
 import com.next.intune.user.dto.response.CheckEmailResponseDto;
 import com.next.intune.user.dto.response.CheckNameResponseDto;
 import com.next.intune.user.dto.response.MyPageResponseDto;
-import com.next.intune.user.entity.ProfileImage;
 import com.next.intune.user.entity.User;
-import com.next.intune.user.repository.ProfileImageRepository;
 import com.next.intune.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +28,6 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final ProfileImageRepository profileImageRepository;
 
     /**
      * 토큰을 만드는 메서드
@@ -60,16 +57,6 @@ public class UserService {
     private void setTokenInCookie(HttpServletResponse response, String token, String expiresAt) {
         CookieHelper.addCookie(response, "access_token", token);
         CookieHelper.addCookie(response, "access_token_expires_at", expiresAt);
-    }
-
-    /**
-     * 회원 가입 시 기본 프로필 이미지를 만들어주는 메서드
-     * 프로필 이미지 엔티티 연관관계 세팅 (User <-> ProfileImage)
-     */
-    private ProfileImage insertProfileImage(User user) {
-        return ProfileImage.builder()
-                .profileImageName("profile-" + user.getUserId() + ".png")
-                .build();
     }
 
     /**
@@ -104,9 +91,6 @@ public class UserService {
                 .address(dto.getAddress())
                 .build();
         userRepository.save(user);
-
-//        ProfileImage profileImage = insertProfileImage(user);
-//        profileImageRepository.save(profileImage);
 
         String token = generateToken(user);
         String expiresAt = generateTokenExpiresAt(token);
