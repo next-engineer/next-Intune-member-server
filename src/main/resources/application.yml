@@ -5,7 +5,7 @@ springdoc:
     path: /api-docs
 
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
@@ -13,6 +13,7 @@ spring:
       intune-member
   datasource:
     url: jdbc:mysql://intune-private-db.c74828wmikhx.ap-northeast-2.rds.amazonaws.com:3306/?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+#    url: jdbc:mysql://localhost:3307/?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: admin
     password: intune1234
