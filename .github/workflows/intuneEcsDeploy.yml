@@ -78,7 +78,7 @@ jobs:
             --cluster ${{ env.ECS_CLUSTER }} \
             --service ${{ env.ECS_SERVICE }} \
             --network-configuration "awsvpcConfiguration={
-              subnets=[subnet-090e2c368bcd8fed4],
+              subnets=[subnet-090e2c368bcd8fed4,subnet-069510d89249b5b82],
               securityGroups=[sg-074528280cf64e28a],
               assignPublicIp=DISABLED
             }"
