@@ -43,8 +43,7 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://intune.nextcloudlab.com",
-                "http://intune.nextcloudlab.com",
-                "http://intune.nextcloudlab.com:8080"
+                "http://intune.nextcloudlab.com"
                 )
         );
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
